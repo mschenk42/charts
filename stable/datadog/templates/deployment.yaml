@@ -99,8 +99,16 @@ spec:
           exec:
             command:
             - ./probe.sh
+          {{- if .Values.datadog.livenessProbe }}
+          initialDelaySeconds: {{ default 15 .Values.datadog.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ default 5 .Values.datadog.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ default 1 .Values.datadog.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ default 1 .Values.datadog.livenessProbe.successThreshold }}
+          failureThreshold: {{ default 3 .Values.datadog.livenessProbe.failureThreshold }}
+          {{- else }}
           initialDelaySeconds: 15
           periodSeconds: 5
+          {{- end }}
       volumes:
         - hostPath:
             path: /var/run/docker.sock
